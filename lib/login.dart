@@ -3,6 +3,10 @@ import 'register.dart';
 import 'package:email_validator/email_validator.dart';
 
 
+bool passwordValid = false;
+bool emailValid = false;
+final _emailController = TextEditingController();
+final _passwordController = TextEditingController();
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -41,6 +45,7 @@ class _LoginState extends State<Login> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     TextFormField(
+                      controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.person_outline,color: Colors.purple),
@@ -50,19 +55,24 @@ class _LoginState extends State<Login> {
                                 right: Radius.circular(5.0))
                         ),
                         label: Text("Email"),
+                        hintText: "fulano@exemplo.com",
                         labelStyle: TextStyle(fontSize: 19.0, color: Colors.purple),
                       ),
                       validator: (email){
                         if(email == null || email.isEmpty){
+                          emailValid = false;
                           return "Enter your e-mail here.";
                         } if (!EmailValidator.validate(email)){
+                          emailValid = false;
                           return "Enter valid e-mail.";
                         }
+                        emailValid = true;
                         return null;
                       },
                     ),
                     const Divider(height: 40.0,color: Colors.transparent),
                     TextFormField(
+                      controller: _passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         icon: Icon(Icons.numbers,color: Colors.purple),
@@ -76,10 +86,13 @@ class _LoginState extends State<Login> {
                       ),
                       validator: (password){
                         if(password == null || password.isEmpty){
+                          passwordValid = false;
                           return "Insert your password here";
                         } else if( password.length < 8){
+                          passwordValid = false;
                           return "Password has to be bigger than 8 chars";
                         }
+                        passwordValid = true;
                         return null;
                       },
                     ),
@@ -91,6 +104,9 @@ class _LoginState extends State<Login> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Logged in")),
                             );
+                          } else {
+                            passwordValid ? false : _passwordController.clear();
+                            emailValid ? false : _emailController.clear();
                           }
                         },
                           style: const ButtonStyle(backgroundColor:MaterialStatePropertyAll(Colors.purple)),
