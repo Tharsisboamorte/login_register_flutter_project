@@ -6,8 +6,8 @@ void main() {
   runApp(MaterialApp(
     home: Login(),
     routes: {
-      "register": (context) => Register(),
       "login": (context) => Login(),
+      "register": (context) => Register(),
     },
   ));
 }

@@ -5,8 +5,6 @@ import 'package:email_validator/email_validator.dart';
 
 bool passwordValid = false;
 bool emailValid = false;
-final _emailController = TextEditingController();
-final _passwordController = TextEditingController();
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -18,6 +16,9 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
 
   final _formKey = GlobalKey<FormState>();
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +114,11 @@ class _LoginState extends State<Login> {
                           child: const Text("Sign in"),
                         ),
                         OutlinedButton(onPressed: (){
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Sign up page")),
-                          );
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                              builder: (context) => const Register()
+                          ));
                         },
                           child: const Text("Sign up",style: TextStyle(color: Colors.purple)),
                         ),
