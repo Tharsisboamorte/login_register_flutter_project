@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'login.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+String? gender;
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -10,9 +13,15 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final phoneMask = MaskTextInputFormatter(
+      mask: "(##) # ####-####",
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
+
   final _registerKey = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordCheckController = TextEditingController();
   final _nameController = TextEditingController();
@@ -26,7 +35,7 @@ class _RegisterState extends State<Register> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(10.0, 30.0, 40.0, 10),
+        padding: const EdgeInsets.fromLTRB(10.0, 10.0, 40.0, 10),
         scrollDirection: Axis.vertical,
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Align(
@@ -35,10 +44,13 @@ class _RegisterState extends State<Register> {
           widthFactor: 1.0,
           child: Column(
             children: <Widget>[
-              const Text("Create an account",
-                  style: TextStyle(color: Colors.purple, fontSize: 30.0)),
+              const Padding(
+                padding: EdgeInsets.only(top: 35.0),
+                child: Text("Create an account",
+                    style: TextStyle(color: Colors.purple, fontSize: 30.0)),
+              ),
               Padding(
-                padding: const EdgeInsets.only(top: 70.0),
+                padding: const EdgeInsets.only(top: 40.0),
                 child: Form(
                     key: _registerKey,
                     child: Column(
@@ -76,6 +88,7 @@ class _RegisterState extends State<Register> {
                                 color: Colors.purple,
                               ),
                               label: Text("Email"),
+                              hintText: "fulano@example.com",
                               labelStyle: TextStyle(color: Colors.purple),
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.horizontal(
@@ -88,6 +101,33 @@ class _RegisterState extends State<Register> {
                               }
                               if (!EmailValidator.validate(email)) {
                                 return "Enter valid e-mail.";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: TextFormField(
+                            inputFormatters: [phoneMask],
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              icon: Icon(
+                                Icons.phone,
+                                color: Colors.purple,
+                              ),
+                              label: Text("Phone"),
+                              hintText: "(DD) 9 9999-9999",
+                              labelStyle: TextStyle(color: Colors.purple),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.horizontal(
+                                      left: Radius.circular(5.0),
+                                      right: Radius.circular(5.0))),
+                            ),
+                            validator: (phone){
+                              if(phone == null || phone.isEmpty){
+                                return "Insert phone number here";
                               }
                               return null;
                             },
@@ -141,11 +181,15 @@ class _RegisterState extends State<Register> {
                             },
                           ),
                         ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15.0),
+                          child: RadioButtonWidget(),
+                        )
                       ],
                     )),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 25.0),
+                padding: const EdgeInsets.only(top: 25.0, bottom: 55.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -166,10 +210,9 @@ class _RegisterState extends State<Register> {
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()
-                            ),
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Login()),
                         );
                       },
                       style: const ButtonStyle(
@@ -188,6 +231,54 @@ class _RegisterState extends State<Register> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RadioButtonWidget extends StatefulWidget {
+  const RadioButtonWidget({Key? key}) : super(key: key);
+
+  @override
+  State<RadioButtonWidget> createState() => _RadioButtonWidgetState();
+}
+
+class _RadioButtonWidgetState extends State<RadioButtonWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        RadioListTile(
+          title: const Text("Male", style: TextStyle(color: Colors.purple)),
+          activeColor: Colors.purple,
+          value: "male",
+          groupValue: gender,
+          onChanged: (value) {
+            setState(() {
+              gender = value.toString();
+            });
+          },
+        ),
+        RadioListTile(
+            title: const Text("Female", style: TextStyle(color: Colors.purple)),
+            activeColor: Colors.purple,
+            value: "female",
+            groupValue: gender,
+            onChanged: (value) {
+              setState(() {
+                gender = value.toString();
+              });
+            }),
+        RadioListTile(
+            title: const Text("Other", style: TextStyle(color: Colors.purple)),
+            activeColor: Colors.purple,
+            value: "other",
+            groupValue: gender,
+            onChanged: (value) {
+              setState(() {
+                gender = value.toString();
+              });
+            }),
+      ],
     );
   }
 }
