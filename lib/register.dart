@@ -258,9 +258,13 @@ class _RadioButtonWidgetState extends State<RadioButtonWidget> {
             });
           },
         ),
+        const Padding(
+          padding: EdgeInsets.only(right: 10.0, left: 50.0),
+          child: Divider(color: Colors.purple, height: 10.0,thickness: 1.0 )),
         RadioListTile(
             title: const Text("Female", style: TextStyle(color: Colors.purple)),
             activeColor: Colors.purple,
+
             value: "female",
             groupValue: gender,
             onChanged: (value) {
@@ -268,6 +272,9 @@ class _RadioButtonWidgetState extends State<RadioButtonWidget> {
                 gender = value.toString();
               });
             }),
+        const Padding(
+            padding: EdgeInsets.only(right: 10.0, left: 50.0),
+            child: Divider(color: Colors.purple, height: 10.0,thickness: 1.0 )),
         RadioListTile(
             title: const Text("Other", style: TextStyle(color: Colors.purple)),
             activeColor: Colors.purple,
